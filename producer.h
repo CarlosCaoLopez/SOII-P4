@@ -9,16 +9,18 @@
 #include <sys/mman.h>
 #include <pthread.h>
 #include <fcntl.h>
+#include <mqueue.h>
 #include "time.h"
 #include "data.h"
 #include <sys/time.h>
+#include <string.h>
 
 
 #define get_rand() ((int)rand()%11)
 
 
 
-void producer(mem_shared *mem_map, int iter); /* Ya no hace falta pasarle el tamaño, está declarado aquí */
+void producer(mqd_t postbox_1, mqd_t postbox_2); /* Ya no hace falta pasarle el tamaño, está declarado aquí */
 
 
 

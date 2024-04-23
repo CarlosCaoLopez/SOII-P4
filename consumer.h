@@ -9,10 +9,12 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <mqueue.h>
 #include "data.h"
+#include <string.h>
 
 
-void consumer(mem_shared *mem_map, int iter);
+void consumer(mqd_t postbox_1, mqd_t postbox_2);
 
 
 #endif //SOII_PRACTICA2_CONSUMER_H
