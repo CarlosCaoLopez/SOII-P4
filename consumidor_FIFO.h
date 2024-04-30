@@ -13,7 +13,7 @@
 #include "data.h"
 #include <string.h>
 
-
+mqd_t create_postbox(const char* postbox_name, int num_messages, int message_size, int oflag);
 void consumer(mqd_t postbox_1, mqd_t postbox_2);
 
 

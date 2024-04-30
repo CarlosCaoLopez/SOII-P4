@@ -16,10 +16,7 @@
 #include <string.h>
 
 
-#define get_rand() ((int)rand()%11)
-
-
-
+mqd_t create_postbox(const char* postbox_name, int num_messages, int message_size, int oflag);
 void producer(mqd_t postbox_1, mqd_t postbox_2); /* Ya no hace falta pasarle el tamaño, está declarado aquí */
 
 

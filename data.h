@@ -4,19 +4,11 @@
 #include <semaphore.h>
 
 /* Tamaño de los buffers */
-#define N_1 8
-#define N_2 10
-
-#define BUC 10
-
-typedef struct{
-    int buffer_size;
-    int * buffer;
-    /* Semáforos buffer para este buffer */
-    sem_t* mutex; 
-    sem_t* empty;
-    sem_t* full;
-}mem_shared;
+#define MAX_BUFFER 5
+/* Tamaño máximo del mensaje */
+#define MAX_MSG_SIZE 8
+/* Número de iteraciones por bucle */
+#define DATOS_A_PRODUCIR 20
 
 
 #endif //SOII_PRACTICA2_DATA_H
