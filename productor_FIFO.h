@@ -2,17 +2,9 @@
 #define SOII_PRACTICA2_PRODUCER_H
 
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <signal.h>
 #include <stdlib.h>
-#include <sys/mman.h>
-#include <pthread.h>
-#include <fcntl.h>
 #include <mqueue.h>
-#include "time.h"
 #include "data.h"
-#include <sys/time.h>
 #include <string.h>
 
 

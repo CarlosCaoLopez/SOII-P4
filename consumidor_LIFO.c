@@ -6,30 +6,38 @@
 int main() {
     char mensaje[MAX_MSG_SIZE];
     mqd_t consumer_box, producer_box;
+    int i;
 
-    /* Creamos el buzón del productor y del consumidor */
+    /* Creamos/abrimos el buzón del productor y del consumidor */
     consumer_box = create_postbox("/buzon1", MAX_BUFFER, MAX_MSG_SIZE, O_RDONLY);
-    producer_box = create_postbox("/buzon2", MAX_BUFFER, MAX_MSG_SIZE, O_WRONLY);
+    /* Lo inicializamos de forma que también podamos leer de él ya que será este proceso el encargado de que no queden menajes vacíos en el buffer*/
+    producer_box = create_postbox("/buzon2", MAX_BUFFER, MAX_MSG_SIZE, O_RDWR);
 
     consumer(consumer_box, producer_box);
+
+    /* Como el consumidor envía MAX_BUFFER mensajes antes de entrar al bucle principal, quedarán elementos en ese buzón sin consumir ya que se envían
+     * MAX_BUFFER + DATOS_A_PRODUCIR mensajes vacíos.
+     * Como desde el productor no sabemos cuando termina el consumidor, los eliminamos desde aquí
+     * */
+
+    for (i=0;i<MAX_BUFFER-1;i++)
+    {
+        if (mq_receive(producer_box,mensaje, MAX_MSG_SIZE, NULL) == -1 )
+        {
+
+            perror("mq_receive");
+            exit(1);
+        }
+    }
 
     /* Cerramos los buzones */
     mq_close(consumer_box);
     mq_close(producer_box);
 
-    /* Comprobamos que quede vacíos el buzón al que envía el productor */
-
-    if(mq_receive(consumer_box,mensaje, MAX_MSG_SIZE, NULL) > 0){ // Si hemos recibido mensaje (bytes recibidos > 0)
-        printf("No se han consumido todos los mensajes eviados por el productor: %s\n", mensaje); // Printeamos
-    }
-
-
-
     return 0;
 }
 
 void consumer(mqd_t postbox_1, mqd_t postbox_2){
-
     int i=0, j;
     char item;
 

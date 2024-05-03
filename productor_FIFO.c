@@ -1,7 +1,6 @@
 #include "productor_FIFO.h"
 
 int main() {
-    char mensaje[MAX_MSG_SIZE];
     mqd_t consumer_box, producer_box;
 
     /* Borrado de los buffers de entrada por si exist´ıan de una ejecuci´on previa*/
@@ -13,13 +12,6 @@ int main() {
     producer_box = create_postbox("/buzon2", MAX_BUFFER, MAX_MSG_SIZE,O_CREAT | O_RDONLY);
 
     producer(consumer_box, producer_box);
-
-    /* Comprobamos que quede vacíos el buzón al que envía el consumidor */
-
-    if(mq_receive(producer_box,mensaje, MAX_MSG_SIZE, NULL) > 0){ // Si hemos recibido mensaje (bytes recibidos > 0)
-        printf("No se han consumido todos los mensajes eviados por el productor: %s\n", mensaje); // Printeamos
-    }
-
 
     return 0;
 }

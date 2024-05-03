@@ -1,7 +1,5 @@
-#ifndef SOII_PRACTICA2_DATA_H
-#define SOII_PRACTICA2_DATA_H
-
-#include <semaphore.h>
+#ifndef SOII_PRACTICA4_DATA_H
+#define SOII_PRACTICA4_DATA_H
 
 /* Tamaño de los buffers */
 #define MAX_BUFFER 5
@@ -11,4 +9,4 @@
 #define DATOS_A_PRODUCIR 20
 
 
-#endif //SOII_PRACTICA2_DATA_H
+#endif //SOII_PRACTICA4_DATA_H
