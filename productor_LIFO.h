@@ -1,6 +1,7 @@
 #ifndef SOII_PRACTICA2_PRODUCER_H
 #define SOII_PRACTICA2_PRODUCER_H
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <mqueue.h>

@@ -1,7 +1,4 @@
-#include "consumidor_FIFO.h"
-
-
-
+#include "consumidor_LIFO.h"
 
 int main() {
     char mensaje[MAX_MSG_SIZE];
@@ -15,16 +12,16 @@ int main() {
 
     consumer(consumer_box, producer_box);
 
-    /* Como el consumidor envía MAX_BUFFER mensajes antes de entrar al bucle principal, quedarán elementos en ese buzón sin consumir ya que se envían
-     * MAX_BUFFER + DATOS_A_PRODUCIR mensajes vacíos.
-     * Como desde el productor no sabemos cuando termina el consumidor, los eliminamos desde aquí
-     * */
-
+    /* El consumidor envía MAX_BUFFER mensajes antes de entrar al bucle principal, y a continuación se envían en el bucle
+     * pricipal DATOS_A_PRODUCIR mensajes vacíos.
+     * De este modo quedarán mensajes en el buzón del productor, ya que se envían MAX_BUFFER + DATOS_A_PRODUCIR mensajes vacíos,
+     * pero solo se hace la recepción de DATOS_A_PRODUCIR mensajes.
+     * Como desde el productor no sabemos cuando termina el consumidor, los eliminamos desde aquí.
+     */
     for (i=0;i<MAX_BUFFER-1;i++)
     {
         if (mq_receive(producer_box,mensaje, MAX_MSG_SIZE, NULL) == -1 )
         {
-
             perror("mq_receive");
             exit(1);
         }
@@ -93,7 +90,7 @@ mqd_t create_postbox(const char* postbox_name, int num_messages, int message_siz
     attr.mq_maxmsg = num_messages;        // Número máximo de mensajes en la cola
     attr.mq_msgsize = message_size;     // Tamaño máximo de cada mensaje
 
-    // Crear el buzón
+    // Crear un buzón o abrir el existente
     mqd_t mq = mq_open(postbox_name, oflag, 0777, &attr);
     if (mq == (mqd_t)-1) {
         perror("Error creando el buzón");

@@ -1,9 +1,9 @@
-#include "productor_FIFO.h"
+#include "productor_LIFO.h"
 
 int main() {
     mqd_t consumer_box, producer_box;
 
-    /* Borrado de los buffers de entrada por si exist´ıan de una ejecuci´on previa*/
+    /* Borrado de los buffers de entrada por si existían de una ejecución previa*/
     mq_unlink("/buzon1");
     mq_unlink("/buzon2");
 
@@ -30,12 +30,9 @@ void producer(mqd_t postbox_1, mqd_t postbox_2){
     while(i < DATOS_A_PRODUCIR){
 
         item = produce_item(i); /* Producimos una letra en el intervalo [a,e]*/
-       // sleep(1); // Forzamos el llenado del buffer al que se envían mensajes vacíos (postbox_2)
 
         // Espera a que llegue un mensaje vacío.
         mq_receive(postbox_2,mensaje, MAX_MSG_SIZE, NULL);
-
-
 
         // Crear mensaje para enviarlo.
         snprintf(mensaje, MAX_MSG_SIZE, "%c", item);
@@ -43,6 +40,7 @@ void producer(mqd_t postbox_1, mqd_t postbox_2){
         // Enviar mensaje al consumidor.
         sscanf(mensaje, "%c", &item);
         printf("Elemento enviado: %c\n", item);
+        // El mensaje siempre tendrá menos prioridad que próximo que se vaya a enviar.
         if ( mq_send(postbox_1, mensaje, strlen(mensaje) + 1, i) == -1 )
         {
             perror("mq_send");
@@ -68,7 +66,7 @@ mqd_t create_postbox(const char* postbox_name, int num_messages, int message_siz
     attr.mq_maxmsg = num_messages;        // Número máximo de mensajes en la cola
     attr.mq_msgsize = message_size;     // Tamaño máximo de cada mensaje
 
-    // Crear el buzón
+    // Crear un buzón o abrir el existente
     mqd_t mq = mq_open(postbox_name, oflag, 0777, &attr);
     if (mq == (mqd_t)-1) {
         perror("Error creando el buzón");
